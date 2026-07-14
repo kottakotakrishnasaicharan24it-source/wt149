@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts - Plus Jakarta Sans & Sora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+            --accent-color: #7c3aed;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(at 0% 0%, rgba(236, 72, 153, 0.12) 0px, transparent 50%),
+                        radial-gradient(at 100% 0%, rgba(79, 70, 229, 0.12) 0px, transparent 50%),
+                        radial-gradient(at 50% 100%, rgba(124, 58, 237, 0.1) 0px, transparent 50%),
+                        linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4, h5, h6, .navbar-brand, .btn-view-profile, .custom-table th {
+            font-family: 'Sora', sans-serif;
+        }
+
+        /* Custom Glassmorphic Navbar */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.4rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-main) !important;
+            position: relative;
+            padding: 0.5rem 1rem !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+
+        /* Glassmorphic Profile Card */
+        .profile-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            overflow: hidden;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .profile-img-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 2rem auto 1.5rem auto;
+            border-radius: 50%;
+            padding: 5px;
+            background: var(--primary-gradient);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.2);
+            transition: transform 0.4s ease;
+        }
+
+        .profile-img-container:hover {
+            transform: scale(1.05) rotate(3deg);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+        }
+
+        .student-name {
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-branch {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+            text-align: left;
+        }
+
+        .info-item {
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            font-size: 1.1rem;
+            width: 30px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 10px;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--text-muted);
+            width: 85px;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--text-main);
+            word-break: break-all;
+        }
+
+        /* View Profile Button */
+        .btn-view-profile {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.25);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 100%;
+        }
+
+        .btn-view-profile:hover {
+            box-shadow: 0 12px 24px rgba(118, 75, 162, 0.4);
+            transform: translateY(-2px);
+            background: var(--primary-gradient);
+            color: white;
+            opacity: 0.95;
+        }
+
+        .btn-view-profile:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(118, 75, 162, 0.25);
+        }
+
+        /* Glassmorphic Table Card */
+        .details-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+            padding: 2rem;
+            height: 100%;
+        }
+
+        .card-title-custom {
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .card-title-custom::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        /* Bootstrap Table Customizations */
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .custom-table {
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+
+        .custom-table thead {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .custom-table th {
+            font-weight: 600;
+            padding: 1rem;
+            border-bottom: none;
+        }
+
+        .custom-table td {
+            padding: 1rem;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .custom-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: rgba(118, 75, 162, 0.05) !important;
+        }
+
+        /* Marks Badges */
+        .badge-marks {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            font-weight: 600;
+            padding: 0.4em 0.8em;
+            border-radius: 6px;
+        }
+
+        .badge-total {
+            background: rgba(118, 75, 162, 0.15);
+            color: var(--accent-color);
+            font-weight: 700;
+            padding: 0.4em 0.8em;
+            border-radius: 6px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--glass-border);
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .footer-college {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.25rem !important;
+        }
+
+        /* Custom Form Control Styling */
+        .form-control {
+            border: 1px solid rgba(118, 75, 162, 0.15) !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .form-control:focus {
+            background: #ffffff !important;
+            border-color: var(--accent-color) !important;
+            box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.15) !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Responsive Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom py-3">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fa-solid fa-graduation-cap me-2"></i>EduPortal
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container using Bootstrap Grid -->
+    <main class="container my-5 flex-grow-1" id="home">
+        <div class="row align-items-stretch justify-content-center">
+
+            <!-- Left Column: Student Profile Card (takes 4 cols on large, 5 on medium, full on mobile) -->
+            <div class="col-lg-4 col-md-5 mb-4">
+                <div class="profile-card text-center h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <!-- Student Photo -->
+                        <div class="profile-img-container">
+                            <img src="./profile_charan.jpng" alt="Student Photo" class="profile-img"
+                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=300&auto=format&fit=crop';">
+                        </div>
+
+                        <!-- Name & Branch -->
+                        <h3 class="student-name">Kottakota Krishna Sai Charan</h3>
+                        <p class="student-branch">Information Technology </p>
+
+                        <!-- Student Details -->
+                        <ul class="info-list">
+                            <li class="info-item">
+                                <span class="info-icon"><i class="fa-solid fa-id-card"></i></span>
+                                <span class="info-label">Roll No:</span>
+                                <span class="info-value">A24126511149</span>
+                            </li>
+                            <li class="info-item">
+                                <span class="info-icon"><i class="fa-solid fa-envelope"></i></span>
+                                <span class="info-label">Email:</span>
+                                <span class="info-value">kottakotakrishnasaicharan.24.it@anits.edu.in</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- View Profile Button (Scrolls to About section) -->
+                    <div>
+                        <a href="#about" class="btn btn-view-profile d-block py-2">
+                            <i class="fa-solid fa-circle-user me-2"></i>About Me
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Academic Details Table (takes 8 cols on large, 7 on medium, full on mobile) -->
+            <div class="col-lg-8 col-md-7 mb-4">
+                <div class="details-card d-flex flex-column justify-content-between">
+                    <div>
+                        <h3 class="card-title-custom">Academic Performance</h3>
+                        <p class="text-muted mb-4">Summary of semester exam scores and grading analysis.</p>
+
+                        <!-- Academic Details Table -->
+                        <div class="table-responsive">
+                            <table class="table custom-table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Subject Name</th>
+                                        <th scope="col" class="text-center">Internal Marks</th>
+                                        <th scope="col" class="text-center">External Marks</th>
+                                        <th scope="col" class="text-center">Total Marks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Web Technologies</td>
+                                        <td class="text-center"><span class="badge-marks">28 / 30</span></td>
+                                        <td class="text-center"><span class="badge-marks">65 / 70</span></td>
+                                        <td class="text-center"><span class="badge-total">93 / 100</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Data Structures & Algorithms</td>
+                                        <td class="text-center"><span class="badge-marks">29 / 30</span></td>
+                                        <td class="text-center"><span class="badge-marks">67 / 70</span></td>
+                                        <td class="text-center"><span class="badge-total">96 / 100</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Operating Systems</td>
+                                        <td class="text-center"><span class="badge-marks">26 / 30</span></td>
+                                        <td class="text-center"><span class="badge-marks">62 / 70</span></td>
+                                        <td class="text-center"><span class="badge-total">88 / 100</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Database Management Systems</td>
+                                        <td class="text-center"><span class="badge-marks">27 / 30</span></td>
+                                        <td class="text-center"><span class="badge-marks">64 / 70</span></td>
+                                        <td class="text-center"><span class="badge-total">91 / 100</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Computer Networks</td>
+                                        <td class="text-center"><span class="badge-marks">25 / 30</span></td>
+                                        <td class="text-center"><span class="badge-marks">60 / 70</span></td>
+                                        <td class="text-center"><span class="badge-total">85 / 100</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Row 2: About Me and Contact Form side-by-side -->
+        <div class="row align-items-stretch justify-content-center mt-2">
+            
+            <!-- About Me Card -->
+            <div class="col-lg-6 mb-4" id="about" style="scroll-margin-top: 100px;">
+                <div class="details-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <h3 class="card-title-custom">About Me</h3>
+                        <p class="text-muted mb-4">A brief introduction about my background, passions, and interests.</p>
+                        
+                        <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+                            Hello! I am Kottakota Krishna Sai Charan, a passionate student currently pursuing my Bachelor of Technology in Information Technology at ANITS. I love turning logical problems into simple, beautiful, and intuitive web experiences.
+                        </p>
+                        <h6 class="font-weight-700 mb-3 mt-4" style="font-size: 0.95rem; color: var(--text-main); border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding-bottom: 5px;">Key Interests & Focus</h6>
+                        <ul class="list-unstyled mb-0" style="font-size: 0.95rem; color: var(--text-muted);">
+                            <li class="mb-2"><i class="fa-solid fa-code text-primary me-2"></i> Frontend Web Development (HTML, CSS, JS)</li>
+                            <li class="mb-2"><i class="fa-solid fa-cubes text-primary me-2"></i> Data Structures & Algorithms</li>
+                            <li class="mb-2"><i class="fa-solid fa-circle-nodes text-primary me-2"></i> Responsive UI/UX Design Systems</li>
+                            <li class="mb-0"><i class="fa-solid fa-laptop-code text-primary me-2"></i> Software Engineering Practices</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Card -->
+            <div class="col-lg-6 mb-4" id="contact" style="scroll-margin-top: 100px;">
+                <div class="details-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <h3 class="card-title-custom">Get in Touch</h3>
+                        <p class="text-muted mb-4">Send a message directly to my email without JavaScript.</p>
+                        
+                        <form action="https://formsubmit.co/kottakotakrishnasaicharan.24.it@anits.edu.in" method="POST" class="text-start">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="form-name" class="form-label text-muted small fw-600">Your Name</label>
+                                    <input type="text" name="name" class="form-control rounded-3" id="form-name" placeholder="Enter name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="form-email" class="form-label text-muted small fw-600">Email Address</label>
+                                    <input type="email" name="email" class="form-control rounded-3" id="form-email" placeholder="Enter email" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="form-message" class="form-label text-muted small fw-600">Message</label>
+                                <textarea name="message" class="form-control rounded-3" id="form-message" rows="4" placeholder="Type your message..." required></textarea>
+                            </div>
+                            
+                            <div class="d-flex justify-content-start">
+                                <button type="submit" class="btn btn-view-profile py-2 px-4" style="width: auto; border-radius: 50px;">
+                                    <i class="fa-solid fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="footer-college">ANITS</p>
+            <p>&copy; 2026 Kottakota Krishna Sai Charan. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
